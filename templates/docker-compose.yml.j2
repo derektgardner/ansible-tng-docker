@@ -47,8 +47,6 @@ services:
       MYSQL_PASSWORD: {{ tng_db_user_password }}
     volumes:
       - /opt/tng-docker/mariadb:/var/lib/mysql
-    ports:
-      - "3306:3306"
     networks:
       - tng
     restart: unless-stopped
