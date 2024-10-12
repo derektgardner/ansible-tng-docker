@@ -1,0 +1,11 @@
+# Don't upload TNG Files
+tng*.zip
+
+# Config file
+config.yml
+
+# Inventory file
+inventory.ini
+
+# Misc
+.DS_Store

@@ -1,0 +1,54 @@
+version: '3.9'
+
+networks:
+  tng:
+    name: tng
+    driver: bridge
+
+services:
+  php-fpm:
+    container_name: tng-php-fpm
+    build:
+      context: .
+      dockerfile: Dockerfile-phpfpm
+    # UID and GID of the system user created.
+    user: "2001:2001"
+    volumes:
+      - /opt/tng-docker/tng-files:/var/www/html
+    networks:
+      - tng
+    restart: unless-stopped
+
+  nginx:
+    container_name: tng-nginx
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - /opt/tng-docker/tng-files:/var/www/html
+    ports:
+      - "80:80"
+    depends_on:
+      - php-fpm
+      - mariadb
+    networks:
+      - tng
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:latest
+    container_name: tng-mariadb
+    # UID and GID of the system user created.
+    user: "2001:2001"
+    environment:
+      MYSQL_ROOT_PASSWORD: {{ mariadb_root_password }}
+      MYSQL_DATABASE: tng
+      MYSQL_USER: {{ tng_db_user }}
+      MYSQL_PASSWORD: {{ tng_db_user_password }}
+    volumes:
+      - /opt/tng-docker/mariadb:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - tng
+    restart: unless-stopped

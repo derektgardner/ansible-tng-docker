@@ -1,0 +1,21 @@
+---
+# Your timezone
+# See https://gist.github.com/derektgardner/6359d6cfa0fd0164274d2ad07be036a4 for a list of options
+server_timezone: 'America/Detroit'
+
+### MariaDB container environment variables ###
+# This is the root password for the entire database. 
+# Consider using Ansible Vault to encrypt the password in this file.
+mariadb_root_password: 'password'
+
+# The user that TNG will use to access the database
+tng_db_user: 'tng'
+
+# The password that the TNG user will use to access the database.
+# Consider using Ansible Vault to encrypt the password in this file.
+tng_db_user_password: 'password'
+
+# The name of the zip file containing the TNG program.
+# This is what you downloaded from the TNG website and should
+# be placed in the 'files' folder.
+tng_zip: 'tng.zip'

@@ -1,0 +1,30 @@
+---
+- name: Check if Docker is already present.
+  ansible.builtin.command: which docker
+  failed_when: false
+  changed_when: false
+  check_mode: false
+  register: docker_command_result
+
+- name: Install Docker and Docker-Compose.
+  ansible.builtin.apt:
+    name:
+      - docker.io
+      - docker-compose-v2
+    state: present
+  when: docker_command_result.rc == 1
+
+- name: Make sure Docker is running.
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Add the ansible user to the Docker group.
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: true
+
+- name: Reset the connection so we can use docker.
+  ansible.builtin.meta: reset_connection

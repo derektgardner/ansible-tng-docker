@@ -1,0 +1,29 @@
+---
+- name: Set up TNG in a Docker container.
+  hosts: tng_docker
+  become: true
+
+  pre_tasks:
+    - name: Load configuration file.
+      ansible.builtin.include_vars: "{{ item }}"
+      loop:
+        - config.yml
+
+    - name: Ensure apt cache is up to date.
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Set timezone.
+      community.general.timezone:
+        name: '{{ server_timezone }}'
+
+  tasks:
+    - name: Setup Docker
+      ansible.builtin.import_tasks: tasks/install-docker.yml
+
+    - name: Setup tng user and group
+      ansible.builtin.import_tasks: tasks/tng-user.yml
+
+    - name: Set up TNG files and directories
+      ansible.builtin.import_tasks: tasks/tng-files.yml

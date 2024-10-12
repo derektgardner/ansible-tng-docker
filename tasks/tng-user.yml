@@ -1,0 +1,15 @@
+---
+- name: Add "tng" group with GID
+  ansible.builtin.group:
+    name: tng
+    state: present
+    gid: 2001
+
+- name: Add "tng" system user and set group
+  ansible.builtin.user:
+    name: tng
+    comment: TNG User
+    uid: 2001
+    group: tng
+    system: true
+    shell: /sbin/nologin
