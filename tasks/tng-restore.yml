@@ -1,0 +1,32 @@
+---
+- name: Copy TNG database files
+  ansible.posix.synchronize:
+    src: tng_backup/mariadb
+    dest: /opt/tng-docker
+
+- name: Copy TNG files
+  ansible.posix.synchronize:
+    src: tng_backup/tng-files
+    dest: /opt/tng-docker
+
+- name: Set the ownership of the TNG database files to the TNG system user.
+  ansible.builtin.file:
+    path: /opt/tng-docker/mariadb
+    state: directory
+    owner: tng
+    group: tng
+    recurse: true
+
+- name: Set the ownership of the TNG files to the TNG system user.
+  ansible.builtin.file:
+    path: /opt/tng-docker/tng-files
+    state: directory
+    owner: tng
+    group: tng
+    recurse: true
+
+- name: Ensure TNG is running.
+  community.docker.docker_compose_v2:
+    project_src: "/opt/tng-docker/"
+    build: always
+  become: false
