@@ -1,5 +1,25 @@
-# Don't upload TNG Files
+# Don't upload TNG files
 tng*.zip
+*.php
+*.gif
+*.png
+*.jpg
+*.css
+*.js
+*.ttf
+*.html
+*.woff2
+*.woff
+*.svg
+*.eot
+*.txt
+*.ico
+*.xml
+*.json
+*.webp
+*.inc
+tng_backup/*
+!tng_backup/.gitkeep
 
 # Config file
 config.yml
