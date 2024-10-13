@@ -20,14 +20,14 @@ This playbook has only been tested on [Ubuntu Server 24.04 LTS (Noble Nubat)](ht
 
 ### Run the Playbook
 
-1. `ansible-playbook main.yml`
+1. `ansible-playbook main.yml -i inventory.ini`
     - Depending on your installation, you may need to use the `-K` option and supply the password of your sudo user on the server/VM you're installing TNG on.
 
-## Usage
+### Usage
 
 Navigate to the TNG installation page at the server/VM's IP address (e.g. http://192.168.1.11/readme.html) and follow the setup prompts.
 
-### Database setup
+#### Database setup
 See your `config.yml` file for the database name, database username and database password. If you did not change any of those, the following are the defaults:
 
 | Setting | Value |
@@ -38,3 +38,23 @@ See your `config.yml` file for the database name, database username and database
 | Database Password | password |
 | Database Port | [leave blank] |
 | Database Socket | [leave blank] |
+
+## Backup a TNG Docker installation
+
+NOTE: This will only backup a TNG docker insallation that was setup using the `main.yml` playbook.
+
+### Run the backup playbook
+
+1. `ansible-playbook backup.yml -i inventory.ini`
+    - Depending on your installation, you may need to use the `-K` option and supply the password of your sudo user on the server/VM you're backing up.
+
+Your TNG files (including media, mods, etc.) as well as the mariadb database will now be in the `tng_backup` folder.
+
+## Restoring a TNG Docker installation
+
+NOTE: This will only restore a TNG docker installation that you have setup using the `main.yml` playbook and then backed-up using the `backup.yml` playbook
+
+### Rune the restore playbook
+
+1. `ansible-playbook restore.yml -i inventory.ini`
+    - Depending on your installation, you may need to use the `-K` option and supply the password of your sudo user on the server/VM you're restoring the TNG installation on.

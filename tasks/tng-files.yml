@@ -20,6 +20,8 @@
     name:
       - unzip
     state: present
+  when:
+    - restore is not defined
 
 - name: Check if /opt/tng-docker/tng-files is empty
   ansible.builtin.find:
@@ -32,7 +34,9 @@
     dest: /opt/tng-docker/tng-files
     owner: tng
     group: '{{ ansible_user }}'
-  when: found_files.matched == 0
+  when:
+    - found_files.matched == 0
+    - restore is not defined
 
 - name: Copy the required docker files and configs.
   ansible.builtin.template:
@@ -51,8 +55,10 @@
     - src: templates/docker-compose.yml.j2
       dest: docker-compose.yml
 
-- name: Ensure monitoring environment is running.
+- name: Ensure TNG is running.
   community.docker.docker_compose_v2:
     project_src: "/opt/tng-docker/"
     build: always
   become: false
+  when:
+    - restore is not defined
