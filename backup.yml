@@ -1,0 +1,45 @@
+---
+- name: Backup TNG.
+  hosts: tng_docker
+  become: true
+
+  tasks:
+    - name: Copy TNG database files to the ansible_user's home folder.
+      ansible.builtin.copy:
+        src: /opt/tng-docker/mariadb
+        dest: /home/{{ ansible_user }}/
+        owner: "{{ ansible_user }}"
+        mode: preserve
+        remote_src: true
+
+    - name: Copy TNG files to the ansible_user's home folder.
+      ansible.builtin.copy:
+        src: /opt/tng-docker/tng-files
+        dest: /home/{{ ansible_user }}/
+        owner: "{{ ansible_user }}"
+        mode: preserve
+        remote_src: true
+
+    - name: Transfer TNG database files to this computer
+      ansible.posix.synchronize:
+        mode: pull
+        src: /home/{{ ansible_user }}/mariadb
+        dest: tng_backup
+      become: false
+
+    - name: Transfer TNG files to this computer
+      ansible.posix.synchronize:
+        mode: pull
+        src: /home/{{ ansible_user }}/tng-files
+        dest: tng_backup
+      become: false
+
+    - name: Remove TNG database files from ansible_user's home folder.
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/mariadb
+        state: absent
+
+    - name: Remove TNG files from ansible_user's home folder.
+      ansible.builtin.file:
+        path: /home/{{ ansible_user }}/tng-files
+        state: absent
